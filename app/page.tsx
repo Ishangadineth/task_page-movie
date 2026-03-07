@@ -50,7 +50,7 @@ export default function Home() {
 
                     <p className="text-[11px] font-black tracking-[0.2em] text-white uppercase opacity-50 flex items-center gap-2">
                         <span className="w-6 h-[1px] bg-primary/40" />
-                        Developed by <span className="text-primary">Ishanga Dineth</span>
+                        Developed by <a href="https://ishangadineth.online" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline decoration-primary/30 underline-offset-4 transition-all">Ishanga Dineth</a>
                         <span className="w-6 h-[1px] bg-primary/40" />
                     </p>
 
