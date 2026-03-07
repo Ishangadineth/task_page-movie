@@ -37,55 +37,55 @@ function UnlockGateContent() {
     const targetUrl = "https://omg10.com/4/10694851";
 
     return (
-        <Card className="w-full max-w-md mx-auto bg-card border-border shadow-2xl rounded-3xl overflow-hidden relative">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
+        <Card className="w-full max-w-md mx-auto bg-card border-border shadow-2xl rounded-3xl overflow-hidden relative animate-in fade-in zoom-in duration-700">
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-secondary to-primary shadow-[0_2px_10px_rgba(168,85,247,0.3)]" />
 
             <CardHeader className="pt-10 pb-6 text-center">
-                <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 ring-4 ring-primary/5">
+                <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 ring-4 ring-primary/5 shadow-inner">
                     {allTasksDone ? (
                         <Unlock className="w-10 h-10 text-primary animate-bounce" />
                     ) : (
                         <Lock className="w-10 h-10 text-primary/80" />
                     )}
                 </div>
-                <CardTitle className="text-3xl font-bold tracking-tight text-white mb-2">
+                <CardTitle className="text-3xl font-black tracking-tight text-white mb-2">
                     Unlock Your File
                 </CardTitle>
-                <CardDescription className="text-muted-foreground text-lg">
+                <CardDescription className="text-muted-foreground text-base font-medium opacity-80">
                     Complete the tasks below to gain access
                 </CardDescription>
             </CardHeader>
 
             <CardContent className="px-6 pb-10 space-y-8">
-                <div className="space-y-3">
-                    <div className="flex justify-between items-end mb-1">
-                        <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-                            <ShieldCheck className="w-4 h-4" /> Progress
+                <div className="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <div className="flex justify-between items-end mb-1 px-1">
+                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] flex items-center gap-2">
+                            <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Progress
                         </span>
-                        <span className="text-lg font-bold text-primary">
-                            {tasksCompleted}/{totalTasks} done
+                        <span className="text-base font-black text-primary tabular-nums">
+                            {tasksCompleted}/{totalTasks} DONE
                         </span>
                     </div>
-                    <Progress value={progress} className="h-3 bg-muted" />
+                    <Progress value={progress} className="h-2.5 bg-background shadow-inner" />
                 </div>
 
                 <div className="space-y-4">
                     <TaskButton
                         label="Verify via Page"
                         icon={<Globe className="w-5 h-5" />}
-                        colorClass="bg-[#BF3A3A]"
+                        colorClass="bg-[#BF3A3A] shadow-[0_5px_15px_rgba(191,58,58,0.3)]"
                         url={targetUrl}
                         isDone={task1Done}
-                        onClick={() => setTask1Done(true)}
+                        onComplete={() => setTask1Done(true)}
                     />
 
                     <TaskButton
                         label="Verify via Page"
                         icon={<Megaphone className="w-5 h-5" />}
-                        colorClass="bg-[#3A8EBF]"
+                        colorClass="bg-[#3A8EBF] shadow-[0_5px_15px_rgba(58,142,191,0.3)]"
                         url={targetUrl}
                         isDone={task2Done}
-                        onClick={() => setTask2Done(true)}
+                        onComplete={() => setTask2Done(true)}
                     />
                 </div>
 
@@ -94,18 +94,18 @@ function UnlockGateContent() {
                         onClick={handleUnlock}
                         disabled={!allTasksDone}
                         className={cn(
-                            "w-full h-16 rounded-xl text-lg font-bold transition-all duration-500 shadow-xl",
+                            "w-full h-16 rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-500 shadow-xl border-t border-white/10",
                             allTasksDone
-                                ? "bg-[#10b981] hover:bg-[#059669] text-white scale-100 hover:scale-[1.02] active:scale-95 shimmer"
-                                : "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                                ? "bg-gradient-to-r from-[#10b981] to-[#059669] text-white scale-100 hover:scale-[1.02] active:scale-95 shadow-[0_10px_20px_rgba(16,185,129,0.3)] shimmer"
+                                : "bg-[#1c1a24] text-gray-600 cursor-not-allowed grayscale border border-white/5"
                         )}
                     >
                         {allTasksDone ? "Unlock File Now" : "Unlock Button Disabled"}
                     </Button>
 
-                    <div className="text-center mt-6">
-                        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] mb-1">Session Identifier</p>
-                        <p className="font-mono text-xs text-primary/60 bg-primary/5 py-1 px-3 rounded-full inline-block">
+                    <div className="text-center mt-10">
+                        <p className="text-[9px] text-muted-foreground/30 font-black uppercase tracking-[0.3em] mb-2 leading-none">Session Security Token</p>
+                        <p className="font-mono text-[11px] font-black text-primary/40 bg-primary/5 py-1.5 px-4 rounded-lg border border-primary/10 inline-block shadow-inner">
                             {id}
                         </p>
                     </div>
@@ -118,8 +118,9 @@ function UnlockGateContent() {
 export function UnlockCard() {
     return (
         <Suspense fallback={
-            <div className="w-full max-w-md mx-auto p-12 flex justify-center items-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            <div className="w-full max-w-md mx-auto p-12 flex flex-col justify-center items-center gap-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-[3px] border-primary/20 border-t-primary"></div>
+                <p className="text-[10px] font-black tracking-widest text-primary/40 uppercase">Initialising System...</p>
             </div>
         }>
             <UnlockGateContent />
