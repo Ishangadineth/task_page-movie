@@ -1,7 +1,6 @@
 "use client";
 
-import React from 'react';
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { CheckCircle2, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +15,7 @@ interface TaskButtonProps {
 
 export function TaskButton({ label, icon, colorClass, isDone, onClick, url }: TaskButtonProps) {
     const handleClick = () => {
-        window.open(url, '_blank');
+        window.open(url, "_blank");
         onClick();
     };
 

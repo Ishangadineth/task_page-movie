@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Lock, Unlock, Globe, Megaphone, ShieldCheck } from "lucide-react";
-import { TaskButton } from "./TaskButton";
+import { TaskButton } from "@/components/TaskButton";
 import { cn } from "@/lib/utils";
 
 function UnlockGateContent() {
