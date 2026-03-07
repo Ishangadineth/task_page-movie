@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-    title: "Sub2Unlock - Complete Tasks to Unlock",
+    title: "UnlockGate - Complete Tasks to Unlock",
     description: "Subscribe to YouTube and verify via ads to unlock your content seamlessly.",
 };
 
