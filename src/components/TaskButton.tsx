@@ -1,34 +1,60 @@
 "use client";
 
-import { LucideIcon, ArrowUpRight } from "lucide-react";
+import React from 'react';
 import { Button } from "@/components/ui/button";
+import { CheckCircle2, ExternalLink } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TaskButtonProps {
-    onClick: () => void;
-    done: boolean;
-    icon: LucideIcon;
     label: string;
-    variant: "red" | "blue";
+    icon: React.ReactNode;
+    colorClass: string;
+    isDone: boolean;
+    onClick: () => void;
+    url: string;
 }
 
-export function TaskButton({ onClick, done, icon: Icon, label, variant }: TaskButtonProps) {
+export function TaskButton({ label, icon, colorClass, isDone, onClick, url }: TaskButtonProps) {
+    const handleClick = () => {
+        window.open(url, '_blank');
+        onClick();
+    };
+
     return (
-        <Button
-            onClick={onClick}
-            disabled={done}
-            variant={done ? "secondary" : variant}
-            className={`w-full group flex items-center justify-between p-4.5 rounded-[1.2rem] transition-all duration-300 border ${done
-                    ? "bg-green-600/10 border-green-500/20 opacity-70 cursor-default"
-                    : ""
-                }`}
+        <button
+            onClick={handleClick}
+            disabled={isDone}
+            className={cn(
+                "w-full h-14 relative flex items-center justify-between px-6 rounded-xl transition-all duration-300 group overflow-hidden border-none text-left",
+                isDone ? "bg-muted cursor-default" : cn("text-white hover:scale-[1.02] active:scale-[0.98]", colorClass)
+            )}
         >
-            <div className="flex items-center gap-4">
-                <div className="w-11 h-11 bg-white/10 rounded-xl flex items-center justify-center border border-white/10">
-                    <Icon className="w-5.5 h-5.5 text-white" />
+            <div className="flex items-center gap-3 relative z-10">
+                <div className={cn(
+                    "p-2 rounded-lg transition-colors",
+                    isDone ? "bg-background text-muted-foreground" : "bg-white/10 text-white"
+                )}>
+                    {icon}
                 </div>
-                <span className="font-black text-[15px] tracking-tight">{label}</span>
+                <span className={cn(
+                    "font-semibold text-base transition-colors",
+                    isDone ? "text-muted-foreground" : "text-white"
+                )}>
+                    {isDone ? `${label} (Done)` : label}
+                </span>
             </div>
-            <ArrowUpRight className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" />
-        </Button>
+
+            <div className="flex items-center relative z-10">
+                {isDone ? (
+                    <CheckCircle2 className="w-6 h-6 text-[#10b981] animate-in zoom-in duration-300" />
+                ) : (
+                    <ExternalLink className="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                )}
+            </div>
+
+            {!isDone && (
+                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            )}
+        </button>
     );
 }

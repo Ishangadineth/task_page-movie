@@ -1,84 +1,27 @@
-"use client";
-
-import { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { Globe, Megaphone } from "lucide-react";
 import { UnlockCard } from "@/components/UnlockCard";
-import { TaskButton } from "@/components/TaskButton";
-
-function LandingContent() {
-    const searchParams = useSearchParams();
-    const id = searchParams.get("id") || "DEFAULT_USER";
-
-    const [tasks, setTasks] = useState({
-        task1: false,
-        task2: false,
-    });
-
-    const [loading, setLoading] = useState(false);
-
-    const isUnlocked = tasks.task1 && tasks.task2;
-    const completedCount = Object.values(tasks).filter(Boolean).length;
-
-    const handleTaskClick = (taskKey: "task1" | "task2", url: string) => {
-        window.open(url, "_blank");
-        setTasks((prev) => ({ ...prev, [taskKey]: true }));
-    };
-
-    const handleUnlock = () => {
-        if (isUnlocked) {
-            setLoading(true);
-            setTimeout(() => {
-                window.location.href = `https://t.me/Ishanga_dineth_TEST_Bot?start=${id}`;
-            }, 1200);
-        }
-    };
-
-    return (
-        <main className="flex flex-col items-center justify-center min-h-screen text-white w-full">
-            {/* Logo Header */}
-            <div className="mb-10 text-center">
-                <h1 className="text-[2.6rem] font-black tracking-tight flex items-center justify-center">
-                    <span>Unlock</span>
-                    <span className="text-purple-500">Gate</span>
-                </h1>
-                <div className="h-1 w-14 bg-purple-600 mx-auto mt-1.5 rounded-full opacity-60 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-            </div>
-
-            <UnlockCard
-                id={id}
-                completedCount={completedCount}
-                isUnlocked={isUnlocked}
-                loading={loading}
-                onUnlock={handleUnlock}
-            >
-                <TaskButton
-                    onClick={() => handleTaskClick("task1", "https://youtube.com/@thushlk")}
-                    done={tasks.task1}
-                    icon={Globe}
-                    label="Verify via Page"
-                    variant="red"
-                />
-                <TaskButton
-                    onClick={() => handleTaskClick("task2", "https://www.google.com")}
-                    done={tasks.task2}
-                    icon={Megaphone}
-                    label="Verify via Page"
-                    variant="blue"
-                />
-            </UnlockCard>
-
-            <footer className="mt-12 text-gray-500 text-[10px] font-black opacity-40 tracking-[0.2em] uppercase">
-                © 2026 UNLOCKGATE SYSTEM. ALL RIGHTS RESERVED.
-            </footer>
-        </main>
-    );
-}
 
 export default function Home() {
     return (
-        <Suspense fallback={<div className="font-black opacity-10 uppercase tracking-widest text-sm">Loading...</div>}>
-            <LandingContent />
-        </Suspense>
+        <main className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-[#19151A]">
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full" />
+                <div className="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full" />
+            </div>
+
+            <div className="relative z-10 w-full">
+                <div className="max-w-md mx-auto mb-8 text-center">
+                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-white mb-2">
+                        Unlock<span className="text-primary italic">Gate</span>
+                    </h1>
+                    <div className="h-1 w-12 bg-primary mx-auto rounded-full" />
+                </div>
+
+                <UnlockCard />
+
+                <footer className="mt-12 text-center text-muted-foreground/40 text-sm">
+                    <p>© {new Date().getFullYear()} UnlockGate System. All rights reserved.</p>
+                </footer>
+            </div>
+        </main>
     );
 }

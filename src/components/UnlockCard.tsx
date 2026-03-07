@@ -1,74 +1,128 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Lock, CheckCircle2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { Lock, Unlock, Globe, Megaphone, ShieldCheck } from "lucide-react";
+import { TaskButton } from "./TaskButton";
+import { cn } from "@/lib/utils";
 
-interface UnlockCardProps {
-    id: string;
-    completedCount: number;
-    isUnlocked: boolean;
-    loading: boolean;
-    onUnlock: () => void;
-    children: React.ReactNode;
-}
+function UnlockGateContent() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id') || 'default_user';
 
-export function UnlockCard({ id, completedCount, isUnlocked, loading, onUnlock, children }: UnlockCardProps) {
+    const [task1Done, setTask1Done] = useState(false);
+    const [task2Done, setTask2Done] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const tasksCompleted = [task1Done, task2Done].filter(Boolean).length;
+    const totalTasks = 2;
+    const progress = (tasksCompleted / totalTasks) * 100;
+    const allTasksDone = tasksCompleted === totalTasks;
+
+    const handleUnlock = () => {
+        if (allTasksDone) {
+            window.location.href = `https://t.me/Ishanga_dineth_TEST_Bot?start=${id}`;
+        }
+    };
+
+    if (!mounted) return null;
+
+    const targetUrl = "https://omg10.com/4/10694851";
+
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full max-w-[340px]"
-        >
-            <Card className="relative">
-                <div className="h-2 w-full bg-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.4)]" />
-                <CardContent className="flex flex-col items-center p-8 pt-10 px-6">
-                    <div className="w-16 h-16 bg-purple-900/15 rounded-full flex items-center justify-center mb-8 border border-purple-500/20 shadow-[0_0_25px_rgba(168,85,247,0.1)]">
-                        <Lock className="w-8 h-8 text-purple-500" />
+        <Card className="w-full max-w-md mx-auto bg-card border-border shadow-2xl rounded-3xl overflow-hidden relative">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
+
+            <CardHeader className="pt-10 pb-6 text-center">
+                <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 ring-4 ring-primary/5">
+                    {allTasksDone ? (
+                        <Unlock className="w-10 h-10 text-primary animate-bounce" />
+                    ) : (
+                        <Lock className="w-10 h-10 text-primary/80" />
+                    )}
+                </div>
+                <CardTitle className="text-3xl font-bold tracking-tight text-white mb-2">
+                    Unlock Your File
+                </CardTitle>
+                <CardDescription className="text-muted-foreground text-lg">
+                    Complete the tasks below to gain access
+                </CardDescription>
+            </CardHeader>
+
+            <CardContent className="px-6 pb-10 space-y-8">
+                <div className="space-y-3">
+                    <div className="flex justify-between items-end mb-1">
+                        <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                            <ShieldCheck className="w-4 h-4" /> Progress
+                        </span>
+                        <span className="text-lg font-bold text-primary">
+                            {tasksCompleted}/{totalTasks} done
+                        </span>
                     </div>
+                    <Progress value={progress} className="h-3 bg-muted" />
+                </div>
 
-                    <h2 className="text-2xl font-black mb-2.5 tracking-tight text-center">Unlock Your File</h2>
-                    <p className="text-gray-400 text-[13px] font-medium mb-10 text-center opacity-80">Complete the tasks below to gain access</p>
+                <div className="space-y-4">
+                    <TaskButton
+                        label="Verify via Page"
+                        icon={<Globe className="w-5 h-5" />}
+                        colorClass="bg-[#BF3A3A]"
+                        url={targetUrl}
+                        isDone={task1Done}
+                        onClick={() => setTask1Done(true)}
+                    />
 
-                    <div className="w-full mb-8 px-1">
-                        <div className="flex justify-between items-center mb-4 text-[10px] font-black tracking-[0.15em]">
-                            <span className="text-gray-500 uppercase flex items-center gap-2">
-                                <CheckCircle2 className="w-3.5 h-3.5" /> PROGRESS
-                            </span>
-                            <span className="text-purple-500 uppercase tracking-wide">
-                                {completedCount}/2 done
-                            </span>
-                        </div>
-                        <Progress value={(completedCount / 2) * 100} />
-                    </div>
+                    <TaskButton
+                        label="Verify via Page"
+                        icon={<Megaphone className="w-5 h-5" />}
+                        colorClass="bg-[#3A8EBF]"
+                        url={targetUrl}
+                        isDone={task2Done}
+                        onClick={() => setTask2Done(true)}
+                    />
+                </div>
 
-                    <div className="w-full space-y-4 mb-10">
-                        {children}
-                    </div>
-
+                <div className="pt-4">
                     <Button
-                        onClick={onUnlock}
-                        disabled={!isUnlocked || loading}
-                        variant={isUnlocked ? "unlock" : "secondary"}
-                        className="w-full"
-                    >
-                        {loading ? (
-                            <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                        ) : (
-                            isUnlocked ? "UNLOCK NOW" : "UNLOCK BUTTON DISABLED"
+                        onClick={handleUnlock}
+                        disabled={!allTasksDone}
+                        className={cn(
+                            "w-full h-16 rounded-xl text-lg font-bold transition-all duration-500 shadow-xl",
+                            allTasksDone
+                                ? "bg-[#10b981] hover:bg-[#059669] text-white scale-100 hover:scale-[1.02] active:scale-95 shimmer"
+                                : "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                         )}
+                    >
+                        {allTasksDone ? "Unlock File Now" : "Unlock Button Disabled"}
                     </Button>
 
-                    <div className="mt-10 text-center uppercase">
-                        <p className="text-[9px] font-black tracking-[0.25em] text-gray-600 mb-2.5">Session Identifier</p>
-                        <p className="text-[11px] font-black font-mono text-purple-500 bg-purple-900/10 px-4 py-1.5 rounded-lg border border-purple-500/10 inline-block shadow-inner">
+                    <div className="text-center mt-6">
+                        <p className="text-[10px] text-muted-foreground/40 uppercase tracking-[0.2em] mb-1">Session Identifier</p>
+                        <p className="font-mono text-xs text-primary/60 bg-primary/5 py-1 px-3 rounded-full inline-block">
                             {id}
                         </p>
                     </div>
-                </CardContent>
-            </Card>
-        </motion.div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+export function UnlockCard() {
+    return (
+        <Suspense fallback={
+            <div className="w-full max-w-md mx-auto p-12 flex justify-center items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+        }>
+            <UnlockGateContent />
+        </Suspense>
     );
 }
