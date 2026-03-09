@@ -12,9 +12,12 @@ import { cn } from "@/lib/utils";
 function UnlockGateContent() {
     const searchParams = useSearchParams();
     const id = searchParams.get('id') || 'default_user';
+    const bot = searchParams.get('bot') || 'IDSMoviePlanetStorage_bot';
 
     const [task1Done, setTask1Done] = useState(false);
     const [task2Done, setTask2Done] = useState(false);
+    const [activeTask, setActiveTask] = useState<1 | 2 | null>(null);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -26,9 +29,19 @@ function UnlockGateContent() {
     const progress = (tasksCompleted / totalTasks) * 100;
     const allTasksDone = tasksCompleted === totalTasks;
 
-    const handleUnlock = () => {
-        if (allTasksDone) {
-            window.location.href = `https://t.me/Ishanga_dineth_TEST_Bot?start=${id}`;
+    const handleUnlock = async () => {
+        if (allTasksDone && !isRedirecting) {
+            setIsRedirecting(true);
+            try {
+                // Background analytics request
+                await fetch('https://idsmovieplanet.ishangawhatsapp.workers.dev/analytics', {
+                    method: 'GET',
+                    mode: 'no-cors'
+                });
+            } catch (error) {
+                console.error('Analytics ping failed', error);
+            }
+            window.location.href = `https://t.me/${bot}?start=${id}`;
         }
     };
 
@@ -76,7 +89,12 @@ function UnlockGateContent() {
                         colorClass="bg-[#BF3A3A] shadow-[0_5px_15px_rgba(191,58,58,0.3)]"
                         url={targetUrl}
                         isDone={task1Done}
-                        onComplete={() => setTask1Done(true)}
+                        isDisabled={activeTask === 2}
+                        onStart={() => setActiveTask(1)}
+                        onComplete={() => {
+                            setTask1Done(true);
+                            setActiveTask(null);
+                        }}
                     />
 
                     <TaskButton
@@ -85,14 +103,19 @@ function UnlockGateContent() {
                         colorClass="bg-[#3A8EBF] shadow-[0_5px_15px_rgba(58,142,191,0.3)]"
                         url={targetUrl}
                         isDone={task2Done}
-                        onComplete={() => setTask2Done(true)}
+                        isDisabled={activeTask === 1}
+                        onStart={() => setActiveTask(2)}
+                        onComplete={() => {
+                            setTask2Done(true);
+                            setActiveTask(null);
+                        }}
                     />
                 </div>
 
                 <div className="pt-4">
                     <Button
                         onClick={handleUnlock}
-                        disabled={!allTasksDone}
+                        disabled={!allTasksDone || isRedirecting}
                         className={cn(
                             "w-full h-16 rounded-2xl text-lg font-black uppercase tracking-widest transition-all duration-500 shadow-xl border-t border-white/10",
                             allTasksDone
@@ -100,7 +123,7 @@ function UnlockGateContent() {
                                 : "bg-[#1c1a24] text-gray-600 cursor-not-allowed grayscale border border-white/5"
                         )}
                     >
-                        {allTasksDone ? "Unlock File Now" : "Unlock Button Disabled"}
+                        {isRedirecting ? "Redirecting..." : allTasksDone ? "Unlock File Now" : "Unlock Button Disabled"}
                     </Button>
 
                     <div className="text-center mt-10">

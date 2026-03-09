@@ -9,11 +9,13 @@ interface TaskButtonProps {
     icon: React.ReactNode;
     colorClass: string;
     isDone: boolean;
+    isDisabled?: boolean;
+    onStart?: () => void;
     onComplete: () => void;
     url: string;
 }
 
-export function TaskButton({ label, icon, colorClass, isDone, onComplete, url }: TaskButtonProps) {
+export function TaskButton({ label, icon, colorClass, isDone, isDisabled = false, onStart, onComplete, url }: TaskButtonProps) {
     const [isVerifying, setIsVerifying] = useState(false);
     const [timeLeft, setTimeLeft] = useState(10);
 
@@ -31,23 +33,26 @@ export function TaskButton({ label, icon, colorClass, isDone, onComplete, url }:
     }, [isVerifying, timeLeft, onComplete]);
 
     const handleClick = () => {
-        if (!isDone && !isVerifying) {
+        if (!isDone && !isVerifying && !isDisabled) {
             window.open(url, "_blank");
             setIsVerifying(true);
+            if (onStart) onStart();
         }
     };
 
     return (
         <button
             onClick={handleClick}
-            disabled={isDone || isVerifying}
+            disabled={isDone || isVerifying || isDisabled}
             className={cn(
                 "w-full h-14 relative flex items-center justify-between px-6 rounded-xl transition-all duration-300 group overflow-hidden border-none text-left",
                 isDone
                     ? "bg-green-600/10 border border-green-500/20 cursor-default"
                     : isVerifying
                         ? "bg-muted animate-pulse cursor-wait"
-                        : cn("text-white hover:scale-[1.02] active:scale-[0.98]", colorClass)
+                        : isDisabled
+                            ? "bg-[#1c1a24] text-muted-foreground cursor-not-allowed opacity-50 grayscale"
+                            : cn("text-white hover:scale-[1.02] active:scale-[0.98]", colorClass)
             )}
         >
             <div className="flex items-center gap-3 relative z-10">
