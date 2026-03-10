@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "UnlockGate - Complete tasks to unlock",
     description: "Professional Sub2Unlock system for content creators.",
+    other: {
+        monetag: "a4080fb652b5ebdc9b2241f956d49a5d"
+    }
 };
 
 export default function RootLayout({
