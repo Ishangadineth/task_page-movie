@@ -12,6 +12,8 @@ export const metadata: Metadata = {
     }
 };
 
+import { InAppBrowserDetector } from "@/components/InAppBrowserDetector";
+
 export default function RootLayout({
     children,
 }: {
@@ -21,7 +23,7 @@ export default function RootLayout({
         <html lang="en" className="dark">
             <head>
                 <script src="https://quge5.com/88/tag.min.js" data-zone="218322" async data-cfasync="false"></script>
-
+                
                 {/* Google Analytics */}
                 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4CGG7SM62C"></script>
                 <script
@@ -36,6 +38,7 @@ export default function RootLayout({
                 />
             </head>
             <body className={`${inter.className} antialiased min-h-screen bg-background text-foreground`}>
+                <InAppBrowserDetector />
                 {children}
             </body>
         </html>
