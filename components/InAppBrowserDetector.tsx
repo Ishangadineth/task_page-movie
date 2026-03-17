@@ -11,19 +11,10 @@ export function InAppBrowserDetector() {
         // Run this instantly on component mount
         const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
         
-        // Detect common in-app browsers more broadly
-        const isTelegramUA = ua.indexOf("Telegram") > -1;
-        const isFB = ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1;
-        const isInsta = ua.indexOf("Instagram") > -1;
-        const isLine = ua.indexOf("Line") > -1;
-        
-        // Many in-app browsers inject specific flags or use generic WebView markers
-        const isGenericWebView = /WebView|wv|Android.*Version\/[\d.]+.*Chrome/.test(ua) && !/Chrome\/[\d.]+ Mobile( Safari\/[\d.]+)?$/.test(ua);
-        
-        // Sometimes referrer gives it away if UA is masked
-        const hasTelegramReferrer = document.referrer.includes('telegram');
+        // Simple and direct Telegram check requested by user
+        const isTelegram = /Telegram/i.test(ua);
 
-        if (isTelegramUA || hasTelegramReferrer || isFB || isInsta || isLine || isGenericWebView) {
+        if (isTelegram) {
             setIsInApp(true);
             const currentUrl = window.location.href;
             const urlWithoutHttp = currentUrl.replace(/^https?:\/\//, "");
@@ -34,8 +25,7 @@ export function InAppBrowserDetector() {
             setIsIOS(iosDetect);
 
             if (androidDetect) {
-                // Instant Force Redirect for Android
-                // Try chrome intent first, fallback to generic https intent
+                // Force open in default external browser for Android
                 window.location.href = `intent://${urlWithoutHttp}#Intent;scheme=https;package=com.android.chrome;end;`;
                 
                 // Fallback attempt after 500ms if the chrome intent fails
